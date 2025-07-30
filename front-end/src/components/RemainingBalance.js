@@ -7,7 +7,7 @@ const RemainingBalance = () => {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/finances');
+            const response = await fetch('https://back-expense-2.onrender.com/finances');
             const data = await response.json();
 
 

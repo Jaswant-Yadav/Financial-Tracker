@@ -3,71 +3,70 @@ import React, { useState, useEffect } from 'react';
 const Expense = () => {
     const [expenseData, setExpenseData] = useState([]);
 
-
+    // Function to fetch data
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/finances');
+            const response = await fetch('https://back-expense-2.onrender.com/finances');
             const data = await response.json();
 
-
-
+            // Filter for expense records
             const expenseRecords = data.filter(item => item.category === 'Expense');
-
             setExpenseData(expenseRecords);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
-
+    // Fetch data and set interval to refresh every 5 seconds
     useEffect(() => {
         fetchData();
         const interval = setInterval(() => {
             fetchData();
         }, 5000);
 
-        return () => clearInterval(interval);
+        return () => clearInterval(interval);  // Cleanup interval on component unmount
     }, []);
 
-
+    // Calculate total expense
     const totalExpense = expenseData.reduce((total, item) => total + item.amount, 0);
 
     return (
         <div className="Finance-list">
             <h1>Expense List</h1>
 
-            <ul>
-                <li><strong>Sr. no.</strong></li>
-                <li><strong>Description</strong></li>
-                <li><strong>Category</strong></li>
-                <li><strong>Amount</strong></li>
-
-            </ul>
-
-            {
-                expenseData.length > 0 ? (
-                    expenseData.map((item, index) => (
-                        <ul key={item._id}>
-                            <li>{index + 1}</li>
-                            <li>{item.description}</li>
-                            <li>{item.category}</li>
-                            <li>{item.amount}</li>
-                        </ul>
-                    ))
-                ) : (
+            {/* Table to display expense records */}
+            <table>
+                <thead>
                     <tr>
-                        <td colSpan="4">No expense data available</td>
+                        <th>Sr. No.</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Amount</th>
                     </tr>
-                )
-            }
+                </thead>
+                <tbody>
+                    {expenseData.length > 0 ? (
+                        expenseData.map((item, index) => (
+                            <tr key={item._id}>
+                                <td>{index + 1}</td>
+                                <td>{item.description}</td>
+                                <td>{item.category}</td>
+                                <td>{item.amount}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4" style={{ textAlign: 'center' }}>No expense data available</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+            <br /><br />
+
             {/* Display total expense */}
-            <ul>
-
-                <li colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total Expense</li>
-                <li style={{ fontWeight: 'bold' }}>{totalExpense}</li>
-            </ul>
-
-
+            <div className="total-expense">
+                <p><strong>Total Expense: </strong> {totalExpense}</p>
+            </div>
         </div>
     );
 };

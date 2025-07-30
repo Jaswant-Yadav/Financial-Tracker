@@ -10,13 +10,13 @@ const SignUp = () => {
     useEffect(() => {
         const auth = localStorage.getItem('user');
         if (auth) {
-            Navigate('/')
+            Navigate('/login')
         }
     })
 
     const colletData = async () => {
         console.log(name, email, password);
-        let result = await fetch('http://localhost:5000/register', {
+        let result = await fetch('https://back-expense-2.onrender.com/register', {
             method: 'post',
             body: JSON.stringify({ name, email, password }),
             headers: {
@@ -48,6 +48,8 @@ const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)} placeholder="Enter your Password" />
 
             <button onClick={colletData} className="RegisterBtn" type="button">Sign Up</button>
+            <br /><br />
+            <a href='/login'>Already have a Account? Log in</a>
         </div>
     )
 }

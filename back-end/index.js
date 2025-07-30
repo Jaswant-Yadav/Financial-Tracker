@@ -3,8 +3,6 @@ require('./db/config');
 const User = require('./db/user');
 const Finance = require('./db/Finance');
 
-
-
 const app = express();
 const cors = require('cors');
 
@@ -23,16 +21,12 @@ app.post('/login', async (req, resp) => {
 
     if (req.body.email && req.body.password) {
         let user = await User.findOne(req.body).select("-password");
-        if (user) {
-            Jwt.sign({ user }, JwtKey, { expiresIn: "1h" }, (err, token) => {
-                if (err) {
-                    resp.send({ result: "Something went wrong, Please try after some time..." })
-                }
-                resp.send({ user, auth: token })
-            })
-        } else {
-            resp.send({ result: "No user found" })
-        }
+       if (user) {
+    resp.send(user);
+} else {
+    resp.send({ result: "No user found" })
+}
+
     }
 });
 
@@ -48,9 +42,13 @@ app.get('/finances', async (req, resp) => {
 
 
 app.post('/finance', async (req, resp) => {
-    let finance = new Finance(req.body);
-    let result = await finance.save();
-    resp.send(result);
+    try {
+        let finance = new Finance(req.body);
+        let result = await finance.save();
+        resp.json(result);  // Ensure you're sending valid JSON
+    } catch (error) {
+        resp.status(500).json({ error: 'Failed to add finance record', details: error.message });
+    }
 });
 
 app.delete('/finances/:id', async (req, resp) => {

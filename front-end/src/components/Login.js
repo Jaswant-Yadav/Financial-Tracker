@@ -16,7 +16,7 @@ const Login = ()=>{
 
     const handleLogin = async () => {
         console.log("email", "password", email, password);
-        let result = await fetch('http://localhost:5000/login', {
+        let result = await fetch('https://back-expense-2.onrender.com/login', {
             method: 'post',
             body: JSON.stringify({ email, password }),
             headers: {
@@ -35,13 +35,14 @@ const Login = ()=>{
     }
 
     return(
-        <div className="login">
+        <div className="Register">
             <h1>Welcome Back</h1>
             <input className="inputBox" type="text" placeholder="Enter Email"
                 onChange={(e) => setEmail(e.target.value)} value={email} />
             <input className="inputBox" type="password" placeholder="Enter Password"
                 onChange={(e) => setPassword(e.target.value)} value={password} />
-            <button className="loginBtn" onClick={handleLogin}>Log in</button>
+            <button className="RegisterBtn" onClick={handleLogin}>Log in</button><br /><br />
+            <a href='/signup'>Don't have a Account? Sign up</a>
         </div>
     )
 }
